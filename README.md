@@ -44,11 +44,17 @@
   - Example runner `run_local.py`:
     - `from alexa_groq.lambda_function import lambda_handler; import json; class Ctx: get_remaining_time_in_millis=lambda self:8000; print(json.dumps(lambda_handler(json.load(open('event.json')), Ctx()), indent=2))`
 
-**Package and Deploy (AWS Lambda)**
-- Zip the Lambda payload from inside `alexa_groq` so modules are at the archive root:
-  - `cd alexa_groq && zip -r ../alexa_groq.zip .`
-- Create or update the Lambda function:
-  - Runtime: Python 3.13.
+**Build and Package (Makefile)**
+- At the repository root, use the provided Makefile:
+  - `make help` — lists available targets.
+  - `make check` — byte‑compiles sources to catch syntax errors early.
+  - `make package` — creates `alexa_groq.zip` from `alexa_groq/` (excludes caches).
+  - `make tree` — prints the contents of the existing zip archive.
+  - `make clean` — removes the zip and local caches.
+
+**Deploy (AWS Lambda)**
+- Create or update the Lambda function using the generated `alexa_groq.zip`:
+  - Runtime: Python 3.11 (or 3.12 where supported by your region).
   - Handler: `lambda_function.lambda_handler`.
   - Memory: 256–512 MB (start with 256 MB; increase if needed).
   - Timeout: 8 seconds (align with Alexa request budget).
@@ -89,4 +95,3 @@
 
 **License**
 - MIT
-
